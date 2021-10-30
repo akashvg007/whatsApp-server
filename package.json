@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec babel-node src/app.js"
+    "dev": "nodemon --exec babel-node src/app.js",
+    "start": "nodemon --exec babel-node src/app.js"
   },
   "dependencies": {
     "@babel/core": "^7.14.3",
