@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const User = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: { type: String },
     phone: { type: String, required: true },
     cr_date: { type: Number, default: Date.now },
     active: { type: Boolean, default: false },
