@@ -52,7 +52,7 @@ export const verify = async (req, res) => {
         const accessToken = generateAccessToken(phone);
         const refreshToken = jwt.sign(phone, REFRESH_TOKEN);
         console.log("tokens", accessToken, refreshToken);
-        Token.create({ refreshToken, phone })
+        await Token.create({ refreshToken, phone })
         const token = { accessToken, refreshToken };
         sendResponse(false, "Logged in successful", res, 200, token);
     }
