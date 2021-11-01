@@ -6,6 +6,7 @@ import moment from "moment";
 import { validateArray } from "../helper/common";
 // import mongoose from 'mongoose';
 import User, { Token } from "../models/user";
+import Contact from "../models/contact";
 import Chat from "../models/chat";
 import { sendOTP } from "../helper/helper_Auth";
 import { verifyOTP } from "../helper/helper_Auth";
@@ -96,6 +97,31 @@ export const getRecent = async (req, res) => {
     }
     catch (err) {
         console.log("getRecent::catch", err.message);
+        sendResponse(true, 104, res, 500);
+    }
+}
+
+export const addToContact = async (req, res) => {
+    try {
+        const from = req.user;
+        const { phone, name } = req.body;
+        const contact = await Contact.create({ name, phone, from });
+        sendResponse(false, "", res, 200, contact);
+    }
+    catch (err) {
+        console.log("addToContact::catch", err.message);
+        sendResponse(true, 104, res, 500);
+    }
+}
+
+export const getMyContacts = async (req, res) => {
+    try {
+        const from = req.user;
+        const contacts = await Contact.find({ from });
+        sendResponse(false, "", res, 200, contacts);
+    }
+    catch (err) {
+        console.log("getMyContacts::catch", err.message);
         sendResponse(true, 104, res, 500);
     }
 }
