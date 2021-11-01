@@ -17,15 +17,25 @@ const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }
-mongoose.connect(DB, options).then(() => console.log('connection successfuly')
-)
-    .catch(err => console.log("connection failed", err)
-    )
+mongoose.connect(DB, options)
+    .then(() => console.log('connection successfuly'))
+    .catch(err => console.log("connection failed", err))
+
+const whitelist = ['http://localhost:3000/', 'http://localhost:3300/']
+const corsOptions = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+}
 
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use("/user", user);
 
 

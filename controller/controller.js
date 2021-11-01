@@ -15,7 +15,7 @@ const { ACCESS_TOKEN_SECRED, REFRESH_TOKEN } = process.env;
 
 const generateAccessToken = (user) => {
     const data = typeof user === "object" ? user : { user };
-    return jwt.sign(data, ACCESS_TOKEN_SECRED, { expiresIn: "20h" });
+    return jwt.sign(data, ACCESS_TOKEN_SECRED, { expiresIn: "31d" });
 };
 
 export const registerOrLogin = async (req, res) => {
@@ -52,7 +52,7 @@ export const verify = async (req, res) => {
         const accessToken = generateAccessToken(phone);
         const refreshToken = jwt.sign(phone, REFRESH_TOKEN);
         console.log("tokens", accessToken, refreshToken);
-        await Token.create({ refreshToken, phone })
+        // await Token.create({ refreshToken, phone })
         const token = { accessToken, refreshToken };
         sendResponse(false, "Logged in successful", res, 200, token);
     }
