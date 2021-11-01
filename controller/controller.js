@@ -87,7 +87,8 @@ export const getMessage = async (req, res) => {
 
 export const getRecent = async (req, res) => {
     try {
-        const { from } = req.params;
+        const from = req.user;
+        console.log("getRecent::from", from);
         const query = { $or: [{ from }, { to: from }] }
         const chats = await Chat.find(query).sort({ _id: -1 });
         console.log("chats", chats);
