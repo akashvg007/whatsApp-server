@@ -17,10 +17,9 @@ const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }
-mongoose.connect(DB, options).then(() => console.log('connection successfuly')
-)
-    .catch(err => console.log("connection failed", err)
-    )
+mongoose.connect(DB, options)
+    .then(() => console.log('connection successfuly'))
+    .catch(err => console.log("connection failed", err))
 
 // middleware
 app.use(express.json());

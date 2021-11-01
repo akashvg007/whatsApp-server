@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { registerOrLogin, verify, sendMessage, getRecent } from "../controller/controller";
+import { authenticateToken } from "../middlewares/auth"
 
 const router = Router();
 router.post("/register", (req, res) => {
@@ -18,7 +19,7 @@ router.post("/get-msg", (req, res) => {
     sendMessage(req, res);
 });
 
-router.get("/getrecent/:from", (req, res) => {
+router.get("/getrecent", authenticateToken, (req, res) => {
     getRecent(req, res);
 });
 

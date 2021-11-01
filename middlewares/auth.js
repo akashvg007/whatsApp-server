@@ -15,7 +15,7 @@ export const authenticateToken = (req, res, next) => {
       if (err) return res.sendStatus(400);
       console.log("authenticateToekn::user", data);
       req.user = data.user;
-      req.type = data.type;
+      // req.type = data.type;
       next();
     });
   } catch (err) {
