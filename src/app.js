@@ -4,7 +4,15 @@ import { config } from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import user from "../routes/user"
+const io = require('socket.io')(3500)
 
+const users = {}
+
+io.on('connection', socket => {
+    socket.on('message', message => {
+        socket.broadcast.emit('chat-message', { message: message, name: users[socket.id] })
+    })
+})
 
 const DB = 'mongodb+srv://root:root@mallucoder.fhzzu.mongodb.net/whatsapp?retryWrites=true&w=majority'
 // configurations and port
