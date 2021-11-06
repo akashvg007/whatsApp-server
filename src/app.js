@@ -15,10 +15,15 @@ const port = process.env.PORT || 3000;
 const io = new Server(server);
 
 io.on('connection', socket => {
-    console.log("a user is connected")
-    socket.on('message', message => {
-        console.log("socket got a message", message);
-        socket.broadcast.emit('chat-message', { message: message, name: users[socket.id] })
+    const id = socket.handshake.query.id
+    socket.join(id)
+
+    socket.on('send-message', ({ recipient, text }) => {
+        console.log("message::text", recipient, text);
+
+        socket.broadcast.to(recipient).emit('receive-message', {
+            recipient, sender: id, text
+        })
     })
 })
 
