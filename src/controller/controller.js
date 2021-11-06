@@ -77,8 +77,8 @@ export const getMessage = async (req, res) => {
     try {
         const { from, to, pagination } = req.body;
         const query = { $or: [{ from, to }, { from: to, to: from }] }
-        await Chat.find(query).sort({ _id: -1 });
-        sendResponse(false, "message send", res, 200);
+        const result = await Chat.find(query).sort({ _id: -1 });
+        sendResponse(false, "message send", res, 200, result);
     }
     catch (err) {
         console.log("getMessage::catch", err.message);
