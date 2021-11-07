@@ -14,19 +14,6 @@ const { Server } = require("socket.io");
 const port = process.env.PORT || 3000;
 const io = new Server(server);
 
-io.on('connection', socket => {
-    const id = socket.handshake.query.id
-    socket.join(id)
-
-    socket.on('send-message', ({ recipient, text }) => {
-        console.log("message::text", recipient, text);
-
-        socket.broadcast.to(recipient).emit('receive-message', {
-            recipient, sender: id, text
-        })
-    })
-})
-
 // connect db
 const DB = 'mongodb+srv://root:root@mallucoder.fhzzu.mongodb.net/whatsapp?retryWrites=true&w=majority'
 const options = {
@@ -41,6 +28,21 @@ mongoose.connect(DB, options)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+
+io.on('connection', socket => {
+    const id = socket.handshake.query.id
+    socket.join(id)
+
+    socket.on('send-message', ({ recipient, text }) => {
+        console.log("message::text", recipient, text);
+
+        socket.broadcast.to(recipient).emit('receive-message', {
+            recipient, sender: id, text
+        })
+    })
+})
+
+//route middleware
 app.use("/user", user);
 
 
@@ -51,7 +53,6 @@ app.get("/", (req, res) => {
 
 
 // server
-
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
 });

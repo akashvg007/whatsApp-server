@@ -92,8 +92,19 @@ export const getRecent = async (req, res) => {
         console.log("getRecent::from", from);
         const query = { $or: [{ from }, { to: from }] }
         const chats = await Chat.find(query).sort({ _id: -1 });
-        console.log("chats", chats);
-        sendResponse(false, "", res, 200, chats);
+        const mappedData = {};
+        chats.forEach(x => {
+            if (x.from === from) {
+                if (!mappedData[x.to]) mappedData[x.to] = []
+                mappedData[x.to].push(x);
+            }
+            else {
+                if (!mappedData[x.from]) mappedData[x.from] = []
+                mappedData[x.from].push(x);
+            }
+        });
+        const lastMessage = Object.keys(mappedData).map((key) => mappedData[key][0])
+        sendResponse(false, "", res, 200, lastMessage);
     }
     catch (err) {
         console.log("getRecent::catch", err.message);
