@@ -133,6 +133,12 @@ export const getMyContacts = async (req, res) => {
     try {
         const from = req.user;
         const contacts = await Contact.find({ from });
+        contacts.forEach((contact) => {
+            const { phone } = contact;
+            if (ContactList[from] && !ContactList[from].includes(phone)) {
+                ContactList[from].push(phone)
+            }
+        })
         sendResponse(false, "", res, 200, contacts);
     }
     catch (err) {
