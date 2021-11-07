@@ -136,3 +136,16 @@ export const getMyContacts = async (req, res) => {
         sendResponse(true, 104, res, 500);
     }
 }
+export const updateProfilePic = async (req, url) => {
+    try {
+        const phone = req.user;
+        const query = { phone }
+        const newData = { profilePic: url };
+        const upsert = { upsert: true }
+        await User.findOneAndUpdate(query, newData, upsert);
+    }
+    catch (err) {
+        console.log("getMyContacts::catch", err.message);
+        throw err;
+    }
+}
