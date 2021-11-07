@@ -2,7 +2,7 @@ import { Router } from "express";
 import { sendResponse } from "../Response/Response";
 import {
     registerOrLogin, verify, sendMessage, getRecent, addToContact, getMessage,
-    getMyContacts, updateProfilePic
+    getMyContacts, updateProfilePic, getAllMyUserDetails
 } from "../controller/controller";
 import { uploadFileBuffer } from "../helper/s3";
 import { authenticateToken } from "../middlewares/auth"
@@ -55,6 +55,10 @@ router.get("/getrecent", authenticateToken, (req, res) => {
 
 router.get("/getcontacts", authenticateToken, (req, res) => {
     getMyContacts(req, res);
+});
+
+router.get("/getAllMyUserDetails", authenticateToken, (req, res) => {
+    getAllMyUserDetails(req, res);
 });
 
 export default router;

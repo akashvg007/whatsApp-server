@@ -19,6 +19,8 @@ const generateAccessToken = (user) => {
     return jwt.sign(data, ACCESS_TOKEN_SECRED, { expiresIn: "31d" });
 };
 
+const ContactList = {};
+
 export const registerOrLogin = async (req, res) => {
     try {
         const { name, phone } = req.body;
@@ -89,6 +91,7 @@ export const getMessage = async (req, res) => {
 export const getRecent = async (req, res) => {
     try {
         const from = req.user;
+        if (!ContactList[from]) ContactList[from] = [];
         console.log("getRecent::from", from);
         const query = { $or: [{ from }, { to: from }] }
         const chats = await Chat.find(query).sort({ _id: -1 });
@@ -103,6 +106,7 @@ export const getRecent = async (req, res) => {
                 mappedData[x.from].push(x);
             }
         });
+        ContactList[from] = Object.keys(mappedData)
         const lastMessage = Object.keys(mappedData).map((key) => mappedData[key][0])
         sendResponse(false, "", res, 200, lastMessage);
     }
@@ -147,5 +151,35 @@ export const updateProfilePic = async (req, url) => {
     catch (err) {
         console.log("getMyContacts::catch", err.message);
         throw err;
+    }
+}
+export const getAllMyUserDetails = async (req, res) => {
+    try {
+        const from = req.user;
+        console.log("contactlist", ContactList);
+
+        if (ContactList && !ContactList[from] || ContactList[from].length == 0) {
+            ContactList[from] = [];
+            const query = { $or: [{ from }, { to: from }] }
+            const chats = await Chat.find(query).sort({ _id: -1 });
+            const mappedData = {};
+            chats.forEach(x => {
+                if (x.from === from) {
+                    if (!mappedData[x.to]) mappedData[x.to] = []
+                    mappedData[x.to].push(x);
+                }
+                else {
+                    if (!mappedData[x.from]) mappedData[x.from] = []
+                    mappedData[x.from].push(x);
+                }
+            });
+            ContactList[from] = Object.keys(mappedData)
+        }
+        const contacts = await User.find({ phone: { $in: [from, ...ContactList[from]] } })
+        sendResponse(false, "", res, 200, contacts);
+    }
+    catch (err) {
+        console.log("getMyContacts::catch", err.message);
+        sendResponse(true, 104, res, 500);
     }
 }
