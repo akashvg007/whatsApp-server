@@ -5,7 +5,8 @@ const User = new mongoose.Schema({
     phone: { type: String, required: true },
     cr_date: { type: Number, default: Date.now },
     active: { type: Boolean, default: false },
-    lastseen: { type: Number, default: Date.now }
+    lastseen: { type: Number, default: Date.now },
+    profilePic: { type: String, required: false }
 })
 export default mongoose.model('User', User);
 
