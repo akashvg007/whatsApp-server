@@ -16,7 +16,7 @@ const { ACCESS_TOKEN_SECRED, REFRESH_TOKEN } = process.env;
 
 const generateAccessToken = (user) => {
     const data = typeof user === "object" ? user : { user };
-    return jwt.sign(data, ACCESS_TOKEN_SECRED, { expiresIn: "31d" });
+    return jwt.sign(data, ACCESS_TOKEN_SECRED, { expiresIn: "365d" });
 };
 
 const ContactList = {};
@@ -77,8 +77,13 @@ export const sendMessage = async (req, res) => {
 }
 export const getMessage = async (req, res) => {
     try {
-        const { from, to, pagination } = req.body;
-        const query = { $or: [{ from, to }, { from: to, to: from }] }
+        const { from, to, pagination, lastTime = 0 } = req.body;
+        const query = {
+            $and: [
+                { $or: [{ from, to }, { from: to, to: from }] },
+                { time: { $gt: lastTime } }
+            ]
+        }
         const result = await Chat.find(query).sort({ _id: -1 });
         sendResponse(false, "message send", res, 200, result);
     }
