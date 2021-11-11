@@ -166,7 +166,7 @@ export const updateProfilePic = async (req, url) => {
 }
 export const updateLastSeen = async (req, res) => {
     try {
-        const { phone } = req.body;
+        const phone = req.user;
         const query = { phone }
         const lastseen = Date.now();
         const newData = { lastseen };
