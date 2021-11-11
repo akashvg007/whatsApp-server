@@ -164,7 +164,7 @@ export const updateProfilePic = async (req, url) => {
         throw err;
     }
 }
-export const updateLastSeen = async (req, url) => {
+export const updateLastSeen = async (req, res) => {
     try {
         const phone = req.user;
         const query = { phone }
@@ -172,9 +172,21 @@ export const updateLastSeen = async (req, url) => {
         const newData = { lastseen };
         const upsert = { upsert: true }
         await User.findOneAndUpdate(query, newData, upsert);
+        sendResponse(false, "", res, 200);
     }
     catch (err) {
         console.log("updateLastSeen::catch", err.message);
+        throw err;
+    }
+}
+export const getLastSeen = async (req, res) => {
+    try {
+        const phone = req.user;
+        const result = await User.find({ phone });
+        sendResponse(false, "", res, 200, result);
+    }
+    catch (err) {
+        console.log("getLastSeen::catch", err.message);
         throw err;
     }
 }
