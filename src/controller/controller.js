@@ -166,7 +166,7 @@ export const updateProfilePic = async (req, url) => {
 }
 export const updateLastSeen = async (req, res) => {
     try {
-        const phone = req.user;
+        const { phone } = req.body;
         const query = { phone }
         const lastseen = Date.now();
         const newData = { lastseen };
@@ -181,7 +181,7 @@ export const updateLastSeen = async (req, res) => {
 }
 export const getLastSeen = async (req, res) => {
     try {
-        const phone = req.user;
+        const { phone } = req.body;
         const result = await User.find({ phone });
         sendResponse(false, "", res, 200, result);
     }

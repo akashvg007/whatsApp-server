@@ -53,11 +53,11 @@ router.get("/getrecent", authenticateToken, (req, res) => {
     getRecent(req, res);
 });
 
-router.get("/update-last-seen", authenticateToken, (req, res) => {
+router.post("/update-last-seen", authenticateToken, (req, res) => {
     updateLastSeen(req, res);
 });
 
-router.get("/get-last-seen", authenticateToken, (req, res) => {
+router.post("/get-last-seen", authenticateToken, (req, res) => {
     getLastSeen(req, res);
 });
 
