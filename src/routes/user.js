@@ -2,7 +2,7 @@ import { Router } from "express";
 import { sendResponse } from "../Response/Response";
 import {
     registerOrLogin, verify, sendMessage, getRecent, addToContact, getMessage,
-    getMyContacts, updateProfilePic, getAllMyUserDetails, updateLastSeen
+    getMyContacts, updateProfilePic, getAllMyUserDetails, updateLastSeen, getLastSeen
 } from "../controller/controller";
 import { uploadFileBuffer } from "../helper/s3";
 import { authenticateToken } from "../middlewares/auth"
@@ -55,6 +55,10 @@ router.get("/getrecent", authenticateToken, (req, res) => {
 
 router.get("/update-last-seen", authenticateToken, (req, res) => {
     updateLastSeen(req, res);
+});
+
+router.get("/get-last-seen", authenticateToken, (req, res) => {
+    getLastSeen(req, res);
 });
 
 router.get("/getcontacts", authenticateToken, (req, res) => {
