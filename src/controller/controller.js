@@ -96,9 +96,15 @@ export const getMessage = async (req, res) => {
 export const getRecent = async (req, res) => {
     try {
         const from = req.user;
+        const { lastTime } = req.params;
         if (!ContactList[from]) ContactList[from] = [];
         console.log("getRecent::from", from);
-        const query = { $or: [{ from }, { to: from }] }
+        const query = {
+            $and: [
+                { $or: [{ from }, { to: from }] },
+                { time: { $gt: lastTime || 0 } }
+            ]
+        }
         const chats = await Chat.find(query).sort({ _id: -1 });
         const mappedData = {};
         chats.forEach(x => {

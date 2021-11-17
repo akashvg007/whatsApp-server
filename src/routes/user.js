@@ -52,6 +52,9 @@ router.post("/addcontact", authenticateToken, (req, res) => {
 router.get("/getrecent", authenticateToken, (req, res) => {
     getRecent(req, res);
 });
+router.get("/getrecent/:lastTime", authenticateToken, (req, res) => {
+    getRecent(req, res);
+});
 
 router.post("/update-last-seen", authenticateToken, (req, res) => {
     updateLastSeen(req, res);
