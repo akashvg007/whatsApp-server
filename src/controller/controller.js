@@ -196,6 +196,19 @@ export const getLastSeen = async (req, res) => {
         throw err;
     }
 }
+
+export const getAllMyUsers = async (req, res) => {
+    try {
+        const { phones=[] } = req.body;
+        const result = await User.find({ phone:{$in:phones} });
+        sendResponse(false, "", res, 200, result);
+    }
+    catch (err) {
+        console.log("getLastSeen::catch", err.message);
+        throw err;
+    }
+}
+
 export const getAllMyUserDetails = async (req, res) => {
     try {
         const from = req.user;
