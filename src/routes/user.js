@@ -14,6 +14,7 @@ import {
   getLastSeen,
   getAllMyUsers,
   updateNameAndDP,
+  removeProfilePic,
 } from "../controller/controller";
 import { uploadFileBuffer } from "../helper/s3";
 import { authenticateToken } from "../middlewares/auth";
@@ -71,6 +72,11 @@ router.post("/addcontact", authenticateToken, (req, res) => {
 router.get("/getrecent", authenticateToken, (req, res) => {
   getRecent(req, res);
 });
+
+router.get("/remove/profile", authenticateToken, (req, res) => {
+  removeProfilePic(req, res);
+});
+
 router.get("/getrecent/:lastTime", authenticateToken, (req, res) => {
   getRecent(req, res);
 });

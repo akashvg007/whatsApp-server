@@ -181,6 +181,19 @@ export const updateProfilePic = async (req, url) => {
     throw err;
   }
 };
+export const updateProfilePic = async (req, res) => {
+  try {
+    const phone = req.user;
+    const query = { phone };
+    const newData = { profilePic: "" };
+    const upsert = { upsert: true };
+    await User.findOneAndUpdate(query, newData, upsert);
+    sendResponse(false, "", res, 200);
+  } catch (err) {
+    console.log("getMyContacts::catch", err.message);
+    throw err;
+  }
+};
 export const updateLastSeen = async (req, res) => {
   try {
     const phone = req.user;
