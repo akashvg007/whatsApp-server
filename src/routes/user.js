@@ -15,6 +15,7 @@ import {
   getAllMyUsers,
   updateNameAndDP,
   removeProfilePic,
+  updateStatus,
 } from "../controller/controller";
 import { uploadFileBuffer } from "../helper/s3";
 import { authenticateToken } from "../middlewares/auth";
@@ -44,6 +45,10 @@ router.post("/upload", authenticateToken, upload, async (req, res) => {
     console.log("err in catch::updatePhoto", err.message);
     sendResponse(true, 101, res, 500);
   }
+});
+
+router.get("/update/status/:from", authenticateToken, (req, res) => {
+  updateStatus(req, res);
 });
 
 router.post("/update/name", (req, res) => {

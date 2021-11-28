@@ -10,6 +10,9 @@ import Contact from "../models/contact";
 import Chat from "../models/chat";
 import { sendOTP } from "../helper/helper_Auth";
 import { verifyOTP } from "../helper/helper_Auth";
+// import mongoose from "mongoose";
+
+const ObjectId = require("mongodb").ObjectId;
 
 config();
 const { ACCESS_TOKEN_SECRED, REFRESH_TOKEN } = process.env;
@@ -223,6 +226,21 @@ export const getAllMyUsers = async (req, res) => {
   try {
     const { phones = [] } = req.body;
     const result = await User.find({ phone: { $in: phones } });
+    sendResponse(false, "", res, 200, result);
+  } catch (err) {
+    console.log("getLastSeen::catch", err.message);
+    throw err;
+  }
+};
+
+export const updateStatus = async (req, res) => {
+  try {
+    const { from } = req.params;
+    const query = { from, to: req.user, status: 1 };
+    const newData = { status: 2 };
+    const upsert = { upsert: true };
+    console.log("query", query);
+    const result = await Chat.updateMany(query, newData, upsert);
     sendResponse(false, "", res, 200, result);
   } catch (err) {
     console.log("getLastSeen::catch", err.message);
