@@ -238,7 +238,7 @@ export const updateStatus = async (req, res) => {
     const { from } = req.params;
     const query = { from, to: req.user, status: 1 };
     const newData = { status: 2 };
-    const upsert = { upsert: true };
+    const upsert = { upsert: false };
     console.log("query", query);
     const result = await Chat.updateMany(query, newData, upsert);
     sendResponse(false, "", res, 200, result);
