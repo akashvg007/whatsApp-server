@@ -16,6 +16,7 @@ import {
   updateNameAndDP,
   removeProfilePic,
   updateStatus,
+  updateNotificationToken,
 } from "../controller/controller";
 import { uploadFileBuffer } from "../helper/s3";
 import { authenticateToken } from "../middlewares/auth";
@@ -53,6 +54,10 @@ router.get("/update/status/:from", authenticateToken, (req, res) => {
 
 router.post("/update/name", (req, res) => {
   updateNameAndDP(req, res);
+});
+
+router.post("/update/notification/token", (req, res) => {
+  updateNotificationToken(req, res);
 });
 
 router.post("/verify", (req, res) => {

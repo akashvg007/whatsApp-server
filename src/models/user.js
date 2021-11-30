@@ -7,6 +7,7 @@ const User = new mongoose.Schema({
   active: { type: Boolean, default: false },
   lastseen: { type: Number, default: Date.now },
   profilePic: { type: String, required: false },
+  notificationTk: { type: String, default: null },
 });
 export default mongoose.model("User", User);
 

@@ -12,10 +12,12 @@ import { sendOTP } from "../helper/helper_Auth";
 import { verifyOTP } from "../helper/helper_Auth";
 // import mongoose from "mongoose";
 
-const ObjectId = require("mongodb").ObjectId;
+import { Expo } from "expo-server-sdk";
 
 config();
 const { ACCESS_TOKEN_SECRED, REFRESH_TOKEN } = process.env;
+
+let expo = new Expo();
 
 const generateAccessToken = (user) => {
   const data = typeof user === "object" ? user : { user };
@@ -23,6 +25,48 @@ const generateAccessToken = (user) => {
 };
 
 const ContactList = {};
+
+const sendPushNotification = async (token, msg, from) => {
+  const message = [];
+  const msgObj = {
+    to: token,
+    sound: "default",
+    body: from + ": " + msg,
+    data: { title: from },
+  };
+  message.push(msgObj);
+  let chunks = expo.chunkPushNotifications(message);
+  let tickets = [];
+  (async () => {
+    for (let chunk of chunks) {
+      try {
+        let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+        console.log(ticketChunk);
+        tickets.push(...ticketChunk);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  })();
+};
+//   msg: text,
+//   to: recipient,
+//   from: sender,
+//   time: Date.now(),
+export const sendMessage = async (req, res) => {
+  try {
+    const { body } = req;
+    const { msg, to, from } = body;
+    await Chat.create(body);
+    const userData = await User.find({ phone: to });
+    const token = userData[0].notificationTk;
+    sendPushNotification(token, msg, from);
+    sendResponse(false, "message send", res, 200);
+  } catch (err) {
+    console.log("sendMessage::catch", err.message);
+    sendResponse(true, 104, res, 500);
+  }
+};
 
 export const registerOrLogin = async (req, res) => {
   try {
@@ -80,15 +124,21 @@ export const updateNameAndDP = async (req, res) => {
   }
 };
 
-export const sendMessage = async (req, res) => {
+export const updateNotificationToken = async (req, res) => {
   try {
-    await Chat.create(req.body);
-    sendResponse(false, "message send", res, 200);
+    const { token } = req.body;
+    const phone = req.user;
+    const query = { phone };
+    const newData = { notificationTk: token };
+    const upsert = { upsert: false };
+    await User.findOneAndUpdate(query, newData, upsert);
+    sendResponse(false, "updated", res, 200);
   } catch (err) {
-    console.log("sendMessage::catch", err.message);
+    console.log("verify::catch", err.message);
     sendResponse(true, 104, res, 500);
   }
 };
+
 export const getMessage = async (req, res) => {
   try {
     const { from, to, pagination, lastTime = 0 } = req.body;
