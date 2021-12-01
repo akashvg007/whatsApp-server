@@ -28,12 +28,13 @@ const ContactList = {};
 
 export const updateImage = async (req, res) => {
   try {
-    const { UpdateImageKey } = queries;
-    const { file } = req;
-    const profileId = await getProfileByMob(req.user);
+    const { file, user } = req;
     const result = await uploadFile(file);
-    const params = [file?.originalname, result?.key, profileId];
-    await executeQuery(UpdateImageKey, params);
+    const { Location } = result;
+    const query = { phone: user };
+    const newData = { profilePic: Location };
+    const upsert = { upsert: false };
+    await User.findOneAndUpdate(query, newData, upsert);
     await unlinkFile(file.path);
     sendResponse(true, "Profile Image Updated", res, 200);
   } catch (err) {
