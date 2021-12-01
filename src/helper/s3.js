@@ -31,7 +31,9 @@ export const uploadFileBuffer = (file) => {
 
 export const uploadFile = (file) => {
   try {
-    const fileStream = fs.createReadStream(file.path);
+    console.log("uploadFile", file);
+
+    const fileStream = fs.createReadStream(file?.path);
 
     const uploadParams = {
       Bucket: bucketName,

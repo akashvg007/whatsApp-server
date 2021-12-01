@@ -35,7 +35,7 @@ export const updateImage = async (req, res) => {
     const newData = { profilePic: Location };
     const upsert = { upsert: false };
     await User.findOneAndUpdate(query, newData, upsert);
-    await unlinkFile(file.path);
+    // unlinkFile(file?.path);
     sendResponse(true, "Profile Image Updated", res, 200);
   } catch (err) {
     console.log("err in catch::updateImage", err.message);

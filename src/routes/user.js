@@ -37,7 +37,7 @@ router.post("/register", (req, res) => {
   registerOrLogin(req, res);
 });
 
-router.post("/update_image", uploader.single("file"), (req, res) => {
+router.post("/update_image", upload, (req, res) => {
   updateImage(req, res);
 });
 
