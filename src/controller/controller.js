@@ -11,7 +11,7 @@ import Chat from "../models/chat";
 import { sendOTP } from "../helper/helper_Auth";
 import { verifyOTP } from "../helper/helper_Auth";
 // import mongoose from "mongoose";
-
+import { uploadFile } from "../helper/s3";
 import { Expo } from "expo-server-sdk";
 
 config();
@@ -25,6 +25,22 @@ const generateAccessToken = (user) => {
 };
 
 const ContactList = {};
+
+export const updateImage = async (req, res) => {
+  try {
+    const { UpdateImageKey } = queries;
+    const { file } = req;
+    const profileId = await getProfileByMob(req.user);
+    const result = await uploadFile(file);
+    const params = [file?.originalname, result?.key, profileId];
+    await executeQuery(UpdateImageKey, params);
+    await unlinkFile(file.path);
+    sendResponse(true, "Profile Image Updated", res, 200);
+  } catch (err) {
+    console.log("err in catch::updateImage", err.message);
+    sendResponse(true, 101, res, 500);
+  }
+};
 
 const sendPushNotification = async (token, msg, from) => {
   const message = [];

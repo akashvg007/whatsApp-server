@@ -17,6 +17,7 @@ import {
   removeProfilePic,
   updateStatus,
   updateNotificationToken,
+  updateImage,
 } from "../controller/controller";
 import { uploadFileBuffer } from "../helper/s3";
 import { authenticateToken } from "../middlewares/auth";
@@ -33,6 +34,10 @@ const upload = multer({ storage: fileStorageEngine }).single("file");
 
 router.post("/register", (req, res) => {
   registerOrLogin(req, res);
+});
+
+router.post("/update_image", upload.single("file"), (req, res) => {
+  updateImage(req, res);
 });
 
 router.post("/upload", authenticateToken, upload, async (req, res) => {
