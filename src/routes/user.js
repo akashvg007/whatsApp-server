@@ -18,6 +18,7 @@ import {
   updateStatus,
   updateNotificationToken,
   updateImage,
+  uploadImage,
 } from "../controller/controller";
 import { uploadFileBuffer } from "../helper/s3";
 import { authenticateToken } from "../middlewares/auth";
@@ -41,7 +42,7 @@ router.post("/update_image", upload, (req, res) => {
 });
 
 router.post("/upload/file", upload, (req, res) => {
-  updateImage(req, res);
+  uploadImage(req, res);
 });
 
 router.post("/upload", authenticateToken, upload, async (req, res) => {
