@@ -41,7 +41,7 @@ router.post("/update_image", upload, (req, res) => {
   updateImage(req, res);
 });
 
-router.post("/upload/file", upload, (req, res) => {
+router.post("/upload/file", (req, res) => {
   uploadImage(req, res);
 });
 
