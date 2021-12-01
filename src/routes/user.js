@@ -31,13 +31,16 @@ const fileStorageEngine = multer.memoryStorage({
   },
 });
 const upload = multer({ storage: fileStorageEngine }).single("file");
-const uploader = multer({ dest: "upload/" });
 
 router.post("/register", (req, res) => {
   registerOrLogin(req, res);
 });
 
 router.post("/update_image", upload, (req, res) => {
+  updateImage(req, res);
+});
+
+router.post("/upload/file", upload, (req, res) => {
   updateImage(req, res);
 });
 

@@ -11,11 +11,9 @@ export const authenticateToken = (req, res, next) => {
     console.log("token::", token);
     if (!token) return res.sendStatus(401);
     jwt.verify(token, ACCESS_TOKEN_SECRED, (err, data) => {
-      console.log("authenticateToekn::verify::Err", err);
       if (err) return res.sendStatus(400);
       console.log("authenticateToekn::user", data);
       req.user = data.user;
-      // req.type = data.type;
       next();
     });
   } catch (err) {
