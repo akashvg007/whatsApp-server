@@ -1,16 +1,11 @@
-import { Router } from "express";
-import { config } from "dotenv";
-import { encryptPassword } from "../helper/authHelper"
-
-const router = Router();
-
-config({ path: ".env" });
+const router = require("express").Router();
+require("dotenv").config({ path: ".env" });
+const { encryptPassword } = require("../helper/authHelper");
 
 router.post("/getAHash", async (req, res) => {
   const { pass } = req.body;
   const hash = await encryptPassword(pass);
-  res.send(hash)
+  res.send(hash);
 });
 
-
-export default router;
+module.exports = router;

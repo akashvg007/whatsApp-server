@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { sendResponse } from "../Response/Response";
-import {
+const userRouter = require("express").Router();
+const responseMgr = require("../Response/Response");
+const {
   registerOrLogin,
   verify,
   sendMessage,
@@ -19,12 +19,10 @@ import {
   updateNotificationToken,
   updateImage,
   uploadImage,
-} from "../controller/controller";
-import { uploadFileBuffer } from "../helper/s3";
-import { authenticateToken } from "../middlewares/auth";
-import multer from "multer";
-
-const router = Router();
+} = require("../controller/controller");
+const { uploadFileBuffer } = require("../helper/s3");
+const { authenticateToken } = require("../middlewares/auth");
+const multer = require("multer");
 
 const fileStorageEngine = multer.memoryStorage({
   destination: (req, file, cb) => {
@@ -33,88 +31,88 @@ const fileStorageEngine = multer.memoryStorage({
 });
 const upload = multer({ storage: fileStorageEngine }).single("file");
 
-router.post("/register", (req, res) => {
+userRouter.post("/register", (req, res) => {
   registerOrLogin(req, res);
 });
 
-router.post("/update_image", upload, (req, res) => {
+userRouter.post("/update_image", upload, (req, res) => {
   updateImage(req, res);
 });
 
-router.post("/upload/file", (req, res) => {
+userRouter.post("/upload/file", upload, (req, res) => {
   uploadImage(req, res);
 });
 
-router.post("/upload", authenticateToken, upload, async (req, res) => {
+userRouter.post("/upload", authenticateToken, upload, async (req, res) => {
   try {
     const { file } = req;
     console.log("inside the upload file", file);
     const result = await uploadFileBuffer(file);
     await updateProfilePic(req, result?.Location);
-    sendResponse(false, "", res, 200, { url: result?.Location });
+    responseMgr(false, "", res, 200, { url: result?.Location });
   } catch (err) {
     console.log("err in catch::updatePhoto", err.message);
-    sendResponse(true, 101, res, 500);
+    responseMgr(true, 101, res, 500);
   }
 });
 
-router.get("/update/status/:from", authenticateToken, (req, res) => {
+userRouter.get("/update/status/:from", authenticateToken, (req, res) => {
   updateStatus(req, res);
 });
 
-router.post("/update/name", (req, res) => {
+userRouter.post("/update/name", (req, res) => {
   updateNameAndDP(req, res);
 });
 
-router.post("/update/notification/token", (req, res) => {
+userRouter.post("/update/notification/token", (req, res) => {
   updateNotificationToken(req, res);
 });
 
-router.post("/verify", (req, res) => {
+userRouter.post("/verify", (req, res) => {
   verify(req, res);
 });
 
-router.post("/getAllContacts", (req, res) => {
+userRouter.post("/getAllContacts", (req, res) => {
   getAllMyUsers(req, res);
 });
 
-router.post("/send-msg", authenticateToken, (req, res) => {
+userRouter.post("/send-msg", authenticateToken, (req, res) => {
   sendMessage(req, res);
 });
 
-router.post("/get-msg", authenticateToken, (req, res) => {
+userRouter.post("/get-msg", authenticateToken, (req, res) => {
   getMessage(req, res);
 });
-router.post("/addcontact", authenticateToken, (req, res) => {
+userRouter.post("/addcontact", authenticateToken, (req, res) => {
   addToContact(req, res);
 });
 
-router.get("/getrecent", authenticateToken, (req, res) => {
+userRouter.get("/getrecent", authenticateToken, (req, res) => {
   getRecent(req, res);
 });
 
-router.get("/remove/profile", authenticateToken, (req, res) => {
+userRouter.get("/remove/profile", authenticateToken, (req, res) => {
   removeProfilePic(req, res);
 });
 
-router.get("/getrecent/:lastTime", authenticateToken, (req, res) => {
+userRouter.get("/getrecent/:lastTime", authenticateToken, (req, res) => {
   getRecent(req, res);
 });
 
-router.post("/update-last-seen", authenticateToken, (req, res) => {
+userRouter.post("/update-last-seen", authenticateToken, (req, res) => {
   updateLastSeen(req, res);
 });
 
-router.post("/get-last-seen", authenticateToken, (req, res) => {
+userRouter.post("/get-last-seen", authenticateToken, (req, res) => {
   getLastSeen(req, res);
 });
 
-router.get("/getcontacts", authenticateToken, (req, res) => {
+userRouter.get("/getcontacts", authenticateToken, (req, res) => {
   getMyContacts(req, res);
 });
 
-router.get("/getAllMyUserDetails", authenticateToken, (req, res) => {
+userRouter.get("/getAllMyUserDetails", authenticateToken, (req, res) => {
   getAllMyUserDetails(req, res);
 });
 
-export default router;
+module.exports = userRouter;

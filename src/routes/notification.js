@@ -1,10 +1,8 @@
-import { Router } from "express";
+const notificationRouter = require("express").Router();
 
-const router = Router();
-
-router.get("/get", (req, res) => {
+notificationRouter.get("/get", (req, res) => {
   req.setTimeout(500000);
   // appliedJob(req, res);
 });
 
-export default router;
+module.exports = notificationRouter;

@@ -1,11 +1,12 @@
-export { codes } from "../Error/errorCode";
+// export { codes } from "../Error/errorCode";
 const defaultResp = {
   error: false,
   message: "",
   data: [],
+  total: 0,
 };
 
-export const sendResponse = (err, code, res, status = 200, data, count) => {
+module.exports = (err, code, res, status = 200, data, count) => {
   defaultResp.data = [];
   defaultResp.message = "";
   defaultResp.error = false;
@@ -18,3 +19,5 @@ export const sendResponse = (err, code, res, status = 200, data, count) => {
   }
   res.status(status).json(defaultResp);
 };
+
+// module.exports = sendResponse;

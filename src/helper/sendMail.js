@@ -1,9 +1,7 @@
-import nodemailer from "nodemailer";
-import { config } from "dotenv";
+const nodemailer = require("nodemailer");
+require("dotenv").config({ path: ".env" });
 
-config({ path: ".env" });
-
-export const sendMails = async (options) => {
+const sendMails = async (options) => {
   try {
     return new Promise((res, rej) => {
       const { MAIL_SERVICE, MAIL_AUTH_USER, MAIL_AUTH_PASS } = process.env;
@@ -17,19 +15,28 @@ export const sendMails = async (options) => {
           rejectUnauthorized: false,
         },
       });
-      console.log("sendMails::service::user::password", MAIL_SERVICE, MAIL_AUTH_USER, MAIL_AUTH_PASS);
+      console.log(
+        "sendMails::service::user::password",
+        MAIL_SERVICE,
+        MAIL_AUTH_USER,
+        MAIL_AUTH_PASS
+      );
       transporterGmail.sendMail(options, (error, info) => {
         if (error) {
           console.log("sendMails::error", error);
-          rej(error)
+          rej(error);
         }
         console.log("Message sent: %s", info);
         console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
         res(info);
       });
-    })
+    });
   } catch (err) {
     console.log("something went wrong", err.message);
     return {};
   }
+};
+
+module.exports = {
+  sendMails,
 };

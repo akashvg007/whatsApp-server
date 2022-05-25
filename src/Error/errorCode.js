@@ -1,4 +1,4 @@
-export const codes = {
+const codes = {
   101: "DB_ERROR",
   102: "EMAIL_ALREADY_EXIST",
   103: "SEND_OTP_ERROR",
@@ -22,3 +22,5 @@ export const codes = {
   121: "PLAN_EXPIRED",
   122: "STATUS_REQUIRED",
 };
+
+module.exports = codes;

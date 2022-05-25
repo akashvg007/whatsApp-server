@@ -1,10 +1,9 @@
-import jwt from "jsonwebtoken";
-import { config } from "dotenv";
+const jwt = require("jsonwebtoken");
+require("dotenv").config({ path: ".env" });
 
-config();
 const { ACCESS_TOKEN_SECRED } = process.env;
 
-export const authenticateToken = (req, res, next) => {
+const authenticateToken = (req, res, next) => {
   try {
     const authHeader = req.headers["authorization"];
     const token = authHeader?.split(" ")[1];
@@ -20,4 +19,8 @@ export const authenticateToken = (req, res, next) => {
     console.log("authenticateToken::catch", err.message);
     res.send(err.message);
   }
+};
+
+module.exports = {
+  authenticateToken,
 };

@@ -1,6 +1,6 @@
-import S3 from "aws-sdk/clients/s3";
-import fs from "fs";
-import { v4 as uuid } from "uuid";
+const S3 = require("aws-sdk/clients/s3");
+const fs = require("fs");
+const { v4 } = require("uuid");
 
 const { AWS_ID, AWS_SECRET, AWS_BUCKET_NAME } = process.env;
 
@@ -13,15 +13,14 @@ const s3 = new S3({
   secretAccessKey,
 });
 
-// upload
-export const uploadFileBuffer = (file) => {
+const uploadFileBuffer = (file) => {
   try {
     const myfile = file.originalname.split(".");
     const fileType = myfile[myfile.length - 1];
     const uploadParams = {
       Bucket: bucketName,
       Body: file.buffer,
-      Key: `${uuid()}.${fileType}`,
+      Key: `${v4()}.${fileType}`,
     };
     return s3.upload(uploadParams).promise();
   } catch (err) {
@@ -29,12 +28,9 @@ export const uploadFileBuffer = (file) => {
   }
 };
 
-export const uploadFile = (file) => {
+const uploadFile = (file) => {
   try {
-    console.log("uploadFile", file);
-
     const fileStream = fs.createReadStream(file?.path);
-
     const uploadParams = {
       Bucket: bucketName,
       Body: fileStream,
@@ -46,21 +42,26 @@ export const uploadFile = (file) => {
   }
 };
 
-export const uploadFileStream = (fileStream, type) => {
+const uploadFileStream = (fileStream, type) => {
   const uploadParams = {
     Bucket: bucketName,
     Body: fileStream,
-    Key: `${uuid()}.${type}`,
+    Key: `${v4()}.${type}`,
   };
   return s3.upload(uploadParams).promise();
 };
 
-// download
-
-export const getFileStream = (fileKey) => {
+const getFileStream = (fileKey) => {
   const downloadParams = {
     Key: fileKey,
     Bucket: bucketName,
   };
   return s3.getObject(downloadParams).createReadStream();
+};
+
+module.exports = {
+  uploadFileBuffer,
+  uploadFile,
+  uploadFileStream,
+  getFileStream,
 };

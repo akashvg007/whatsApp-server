@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const User = new mongoose.Schema({
   name: { type: String },
@@ -9,7 +9,7 @@ const User = new mongoose.Schema({
   profilePic: { type: String, required: false },
   notificationTk: { type: String, default: null },
 });
-export default mongoose.model("User", User);
+const users = mongoose.model("User", User);
 
 const token = new mongoose.Schema({
   refreshToken: { type: String, required: true },
@@ -17,4 +17,9 @@ const token = new mongoose.Schema({
   cr_date: { type: Number, default: Date.now },
 });
 
-export const Token = mongoose.model("Token", token);
+const tokens = mongoose.model("Token", token);
+
+module.exports = {
+  users,
+  tokens,
+};
