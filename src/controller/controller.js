@@ -21,7 +21,7 @@ const ContactList = {};
 
 const uploadImage = async (req, res) => {
   try {
-    const { file, type } = req.body;
+    const { file, type, user } = req.body;
     const result = await uploadFileStream({ file, type });
     console.log("uploadImage::result", result);
     const { Location } = result;
@@ -120,13 +120,20 @@ const verify = async (req, res) => {
     const query = { phone };
     const newData = { active: true };
     const upsert = { upsert: true };
-    await UserModel.users.findOneAndUpdate(query, newData, upsert);
+    const profile = await UserModel.users.findOneAndUpdate(
+      query,
+      newData,
+      upsert
+    );
     const accessToken = generateAccessToken(phone);
     const refreshToken = jwt.sign(phone, REFRESH_TOKEN);
-    console.log("tokens", accessToken, refreshToken);
+    console.log("profile", profile);
     // await Token.create({ refreshToken, phone })
     const token = { accessToken, refreshToken };
-    sendResponseMgr(false, "Logged in successful", res, 200, token);
+    sendResponseMgr(false, "Logged in successful", res, 200, {
+      token,
+      profile,
+    });
   } catch (err) {
     console.log("verify::catch", err.message);
     sendResponseMgr(true, 104, res, 500);
